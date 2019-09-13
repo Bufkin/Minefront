@@ -2,27 +2,23 @@ package com.mime.minefront;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-import javax.swing.JFrame;
-
 import com.mime.minefront.graphics.Screen;
+import com.mime.minefront.gui.Launcher;
 import com.mime.minefront.input.Controller;
 import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable {
 	private static final long serialVersionUID = -346504722713325956L;
 
-	public final static int WIDTH = 800;
-	public final static int HEIGHT = 600;
+	public static int width = 800;
+	public static int height = 600;
 	public static final String TITLE = "Minefront Pre-Alpha 0.02";
 
 	private Thread thread;
@@ -35,6 +31,7 @@ public class Display extends Canvas implements Runnable {
 	private int newX = 0;
 	private int oldX = 0;
 	private int fps;
+	public static int selection = 0;
 
 	public static int MouseSpeed;
 
@@ -44,9 +41,9 @@ public class Display extends Canvas implements Runnable {
 		this.setMinimumSize(size);
 		this.setMaximumSize(size);
 
-		this.screen = new Screen(Display.WIDTH, Display.HEIGHT);
+		this.screen = new Screen(Display.getGameWidth(), Display.getGameHeight());
 		this.game = new Game();
-		this.img = new BufferedImage(Display.WIDTH, Display.HEIGHT, BufferedImage.TYPE_INT_RGB);
+		this.img = new BufferedImage(Display.getGameWidth(), Display.getGameHeight(), BufferedImage.TYPE_INT_RGB);
 		this.pixels = ((DataBufferInt) this.img.getRaster().getDataBuffer()).getData();
 
 		this.input = new InputHandler();
@@ -56,7 +53,33 @@ public class Display extends Canvas implements Runnable {
 		this.addMouseMotionListener(this.input);
 	}
 
-	private void start() {
+	public static int getGameWidth() {
+		if (selection == 0) {
+			width = 640;
+		}
+		if (selection == 1 || selection == -1) {
+			width = 800;
+		}
+		if (selection == 2) {
+			width = 1024;
+		}
+		return width;
+	}
+
+	public static int getGameHeight() {
+		if (selection == 0) {
+			height = 480;
+		}
+		if (selection == 1 || selection == -1) {
+			height = 600;
+		}
+		if (selection == 2) {
+			height = 768;
+		}
+		return height;
+	}
+
+	public synchronized void start() {
 		if (this.running) {
 			return;
 		}
@@ -65,7 +88,7 @@ public class Display extends Canvas implements Runnable {
 		this.thread.start();
 	}
 
-	private void stop() {
+	private synchronized void stop() {
 		if (!this.running) {
 			return;
 		}
@@ -74,7 +97,7 @@ public class Display extends Canvas implements Runnable {
 			this.thread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(1);
 		}
 	}
 
@@ -143,12 +166,12 @@ public class Display extends Canvas implements Runnable {
 
 		this.screen.render(this.game);
 
-		for (int i = 0; i < Display.WIDTH * Display.HEIGHT; i++) {
+		for (int i = 0; i < Display.getGameWidth() * Display.getGameHeight(); i++) {
 			this.pixels[i] = this.screen.pixels[i];
 		}
 
 		Graphics g = bs.getDrawGraphics();
-		g.drawImage(this.img, 0, 0, Display.WIDTH, Display.HEIGHT, null);
+		g.drawImage(this.img, 0, 0, Display.getGameWidth(), Display.getGameHeight(), null);
 		g.setFont(new Font("Verdana", 2, 50));
 		g.setColor(Color.YELLOW);
 		g.drawString(this.fps + " FPS", 20, 50);
@@ -157,19 +180,6 @@ public class Display extends Canvas implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		BufferedImage cursor = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-		Cursor blank = Toolkit.getDefaultToolkit().createCustomCursor(cursor, new Point(0, 0), "blank");
-		Display game = new Display();
-		JFrame frame = new JFrame();
-		frame.add(game);
-		frame.pack();
-		frame.getContentPane().setCursor(blank);
-		frame.setTitle(TITLE);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocationRelativeTo(null);
-		frame.setResizable(false);
-		frame.setVisible(true);
-
-		game.start();
+		new Launcher(0);
 	}
 }

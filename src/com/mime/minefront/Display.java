@@ -33,10 +33,10 @@ public class Display extends Canvas implements Runnable {
 	private int[] pixels;
 	private InputHandler input;
 	private int newX = 0;
-	private int newY = 0;
 	private int oldX = 0;
-	private int oldY = 0;
 	private int fps;
+
+	public static int MouseSpeed;
 
 	public Display() {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -113,7 +113,6 @@ public class Display extends Canvas implements Runnable {
 			frames++;
 
 			this.newX = InputHandler.MouseX;
-			this.newY = InputHandler.MouseY;
 
 			if (this.newX > this.oldX) {
 				Controller.turnRight = true;
@@ -125,6 +124,7 @@ public class Display extends Canvas implements Runnable {
 				Controller.turnLeft = false;
 				Controller.turnRight = false;
 			}
+			MouseSpeed = Math.abs(this.newX - this.oldX);
 			this.oldX = this.newX;
 		}
 	}

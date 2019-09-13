@@ -40,12 +40,10 @@ public class Controller {
 
 		if (turnLeft) {
 			this.rotationa -= rotationSpeed;
-			walk = true;
 		}
 
 		if (turnRight) {
 			this.rotationa += rotationSpeed;
-			walk = true;
 		}
 
 		if (jump) {

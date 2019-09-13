@@ -49,14 +49,7 @@ public class Configuration {
 	}
 
 	public void setResolution(int width, int height) {
-		if (width == 640 && height == 480) {
-			Display.selection = 0;
-		}
-		if (width == 800 && height == 600) {
-			Display.selection = 1;
-		}
-		if (width == 1024 && height == 768) {
-			Display.selection = 2;
-		}
+		Display.width = width;
+		Display.height = height;
 	}
 }

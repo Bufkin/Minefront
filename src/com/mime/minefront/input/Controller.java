@@ -1,5 +1,7 @@
 package com.mime.minefront.input;
 
+import com.mime.minefront.Display;
+
 public class Controller {
 
 	public double x, y, z, rotation, xa, za, rotationa;
@@ -11,7 +13,7 @@ public class Controller {
 
 	public void tick(boolean forward, boolean back, boolean left, boolean right, boolean jump, boolean crouch,
 			boolean run) {
-		double rotationSpeed = 0.025;
+		double rotationSpeed = 0.002 * Display.MouseSpeed;
 		double walkSpeed = 0.5;
 		double jumpHeight = 0.5;
 		double crouchHeight = 0.35;

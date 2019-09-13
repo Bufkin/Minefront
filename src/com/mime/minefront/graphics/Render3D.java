@@ -59,7 +59,7 @@ public class Render3D extends Render {
 				int xPix = (int) (xx + this.right);
 				int yPix = (int) (yy + this.forward);
 				this.zBuffer[x + y * this.width] = z;
-				this.pixels[x + y * this.width] = Texture.floor.pixels[(xPix & 31) + (yPix & 31) * 32];
+				this.pixels[x + y * this.width] = Texture.floor.pixels[(xPix & 7) + (yPix & 7) * 8];
 			}
 		}
 	}

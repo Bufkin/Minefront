@@ -77,8 +77,8 @@ public class Controller {
 			runWalk = false;
 		}
 
-		this.xa += (xMove * Math.cos(this.rotation) + zMove * Math.sin(this.rotation)) * walkSpeed;
-		this.za += (zMove * Math.cos(this.rotation) + xMove * Math.sin(this.rotation)) * walkSpeed;
+		this.xa += (xMove * Math.cos(this.rotation) + xMove * Math.sin(this.rotation)) * walkSpeed;
+		this.za += (zMove * Math.cos(this.rotation) + zMove * Math.sin(this.rotation)) * walkSpeed;
 
 		this.x += this.xa;
 		this.y *= 0.9;

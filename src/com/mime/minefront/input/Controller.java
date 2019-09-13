@@ -21,22 +21,22 @@ public class Controller {
 		double zMove = 0;
 
 		if (forward) {
-			zMove++;
+			zMove += walkSpeed;
 			walk = true;
 		}
 
 		if (back) {
-			zMove--;
+			zMove -= walkSpeed;
 			walk = true;
 		}
 
 		if (left) {
-			xMove--;
+			xMove -= walkSpeed;
 			walk = true;
 		}
 
 		if (right) {
-			xMove++;
+			xMove += walkSpeed;
 			walk = true;
 		}
 
@@ -65,7 +65,7 @@ public class Controller {
 			runWalk = true;
 		}
 
-		if (!forward && !back && !left && !right && !turnLeft && !turnRight && !run) {
+		if (!forward && !back && !left && !right && !run) {
 			walk = false;
 		}
 
@@ -77,8 +77,8 @@ public class Controller {
 			runWalk = false;
 		}
 
-		this.xa += (xMove * Math.cos(this.rotation) + xMove * Math.sin(this.rotation)) * walkSpeed;
-		this.za += (zMove * Math.cos(this.rotation) + zMove * Math.sin(this.rotation)) * walkSpeed;
+		this.xa += (xMove * Math.cos(this.rotation) + zMove * Math.sin(this.rotation)) * walkSpeed;
+		this.za += (zMove * Math.cos(this.rotation) + xMove * Math.sin(this.rotation)) * walkSpeed;
 
 		this.x += this.xa;
 		this.y *= 0.9;
@@ -86,6 +86,6 @@ public class Controller {
 		this.xa *= 0.1;
 		this.za *= 0.1;
 		this.rotation += this.rotationa;
-		this.rotationa *= 0.5;
+		this.rotationa *= 0.8;
 	}
 }

@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import com.mime.minefront.Configuration;
 import com.mime.minefront.RunGame;
 
 public class Launcher extends JFrame {
@@ -19,6 +20,7 @@ public class Launcher extends JFrame {
 	protected JPanel window = new JPanel();
 	private JButton play, options, help, quit;
 	private Rectangle rplay, roptions, rhelp, rquit;
+	Configuration config = new Configuration();
 
 	private int width = 240;
 	private int height = 320;
@@ -43,6 +45,7 @@ public class Launcher extends JFrame {
 		if (id == 0) {
 			this.drawButtons();
 		}
+		this.repaint();
 	}
 
 	private void drawButtons() {
@@ -74,6 +77,7 @@ public class Launcher extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Launcher.this.config.loadConfiguration("res/settings/config.xml");
 				Launcher.this.dispose();
 				new RunGame();
 			}

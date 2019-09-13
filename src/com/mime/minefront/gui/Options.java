@@ -8,8 +8,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import com.mime.minefront.Display;
-
 public class Options extends Launcher {
 
 	private static final long serialVersionUID = -7743258581038005972L;
@@ -48,7 +46,24 @@ public class Options extends Launcher {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Display.selection = Options.this.resolution.getSelectedIndex();
+				int selection = Options.this.resolution.getSelectedIndex();
+				int w = 0;
+				int h = 0;
+				if (selection == 0) {
+					w = 640;
+					h = 480;
+				}
+				if (selection == 1 || selection == -1) {
+					w = 800;
+					h = 600;
+				}
+				if (selection == 2) {
+					w = 1024;
+					h = 768;
+				}
+
+				Options.this.config.saveConfiguration("width", w);
+				Options.this.config.saveConfiguration("height", h);
 				Options.this.dispose();
 				new Launcher(0);
 			}

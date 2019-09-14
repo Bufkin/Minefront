@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.mime.minefront.Display;
+
 public class Options extends Launcher {
 
 	private static final long serialVersionUID = -7743258581038005972L;
@@ -28,7 +30,7 @@ public class Options extends Launcher {
 	int h = 0;
 
 	public Options() {
-		super(1);
+		super(1, new Display());
 		this.setTitle("Options - Minefront Launcher");
 		this.setSize(new Dimension(this.width, this.height));
 		this.setLocationRelativeTo(null);
@@ -91,7 +93,7 @@ public class Options extends Launcher {
 				Options.this.config.saveConfiguration("width", w);
 				Options.this.config.saveConfiguration("height", h);
 				Options.this.dispose();
-				new Launcher(0);
+				new Launcher(0, new Display());
 				Options.this.config.saveConfiguration("width", Options.this.parseWidth());
 				Options.this.config.saveConfiguration("height", Options.this.parseHeight());
 			}

@@ -8,6 +8,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import com.mime.minefront.graphics.Screen;
 import com.mime.minefront.gui.Launcher;
@@ -109,13 +112,14 @@ public class Display extends Canvas implements Runnable {
 					previousTime += 1000;
 					frames = 0;
 				}
+				if (ticked) {
+//					this.render();
+					this.renderMenu();
+					frames++;
+				}
 			}
-			if (ticked) {
-				this.render();
-				frames++;
-			}
-			this.render();
-			frames++;
+
+//			this.render();
 
 			this.newX = InputHandler.MouseX;
 
@@ -137,6 +141,29 @@ public class Display extends Canvas implements Runnable {
 
 	private void tick() {
 		this.game.tick(this.input.key);
+	}
+
+	private void renderMenu() {
+		BufferStrategy bs = this.getBufferStrategy();
+		if (bs == null) {
+			this.createBufferStrategy(3);
+			return;
+		}
+
+		Graphics g = bs.getDrawGraphics();
+		g.drawImage(this.img, 0, 0, Display.getGameWidth(), Display.getGameHeight(), null);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 800, 400);
+		try {
+			g.drawImage(ImageIO.read(Display.class.getResource("/menu_image.jpg")), 0, 0, 800, 400, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Verdana", 0, 30));
+		g.drawString("Play", 700, 90);
+		g.dispose();
+		bs.show();
 	}
 
 	private void render() {
@@ -162,6 +189,7 @@ public class Display extends Canvas implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		new Launcher(0);
+		Display display = new Display();
+		new Launcher(0, display);
 	}
 }

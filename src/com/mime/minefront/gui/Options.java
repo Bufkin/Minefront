@@ -24,8 +24,8 @@ public class Options extends Launcher {
 	private JLabel lwidth, lheight;
 	private Rectangle rOK, rresolution;
 
-	private int w = 0;
-	private int h = 0;
+	int w = 0;
+	int h = 0;
 
 	public Options() {
 		super(1);
@@ -113,6 +113,7 @@ public class Options extends Launcher {
 			this.w = 1024;
 			this.h = 768;
 		}
+
 	}
 
 	private int parseWidth() {

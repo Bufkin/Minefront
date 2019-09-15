@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import com.mime.minefront.Configuration;
-import com.mime.minefront.Display;
 import com.mime.minefront.RunGame;
 import com.mime.minefront.input.InputHandler;
 
@@ -39,7 +38,7 @@ public class Launcher extends Canvas implements Runnable {
 	Thread thread;
 	JFrame frame = new JFrame();
 
-	public Launcher(int id, Display display) {
+	public Launcher(int id) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -64,7 +63,6 @@ public class Launcher extends Canvas implements Runnable {
 		this.addMouseListener(input);
 		this.addMouseMotionListener(input);
 		this.startMenu();
-		display.start();
 		this.frame.repaint();
 	}
 
@@ -93,12 +91,16 @@ public class Launcher extends Canvas implements Runnable {
 	@Override
 	public void run() {
 		while (this.running) {
-			this.renderMenu();
+			try {
+				this.renderMenu();
+			} catch (IllegalStateException e) {
+				System.out.println("Handled, baby!");
+			}
 			this.updateFrame();
 		}
 	}
 
-	private void renderMenu() {
+	private void renderMenu() throws IllegalStateException {
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
 			this.createBufferStrategy(3);
@@ -115,7 +117,9 @@ public class Launcher extends Canvas implements Runnable {
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/play_on.png")), 690, 130, 80, 30, null);
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 134, 22, 20, null);
 				if (InputHandler.MouseButton == 1) {
-
+					this.config.loadConfiguration("res/settings/config.xml");
+					this.frame.dispose();
+					new RunGame();
 				}
 			} else {
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/play_off.png")), 690, 130, 80, 30, null);
@@ -126,7 +130,7 @@ public class Launcher extends Canvas implements Runnable {
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/options_on.png")), 641, 170, 130, 30, null);
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 174, 22, 20, null);
 				if (InputHandler.MouseButton == 1) {
-
+					new Options();
 				}
 			} else {
 				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/options_off.png")), 641, 170, 130, 30, null);

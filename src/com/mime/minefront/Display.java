@@ -32,8 +32,9 @@ public class Display extends Canvas implements Runnable {
 	private int oldX = 0;
 	private int fps;
 	public static int selection = 0;
-
 	public static int MouseSpeed;
+
+	static Launcher launcher;
 
 	public Display() {
 		Dimension size = new Dimension(WIDTH, HEIGHT);
@@ -51,6 +52,13 @@ public class Display extends Canvas implements Runnable {
 		this.addFocusListener(this.input);
 		this.addMouseListener(this.input);
 		this.addMouseMotionListener(this.input);
+	}
+
+	public static Launcher getLauncherInstance() {
+		if (launcher == null) {
+			launcher = new Launcher(0);
+		}
+		return launcher;
 	}
 
 	public static int getGameWidth() {
@@ -97,6 +105,7 @@ public class Display extends Canvas implements Runnable {
 			long passedTime = currentTime - previousTime;
 			previousTime = currentTime;
 			unprocessedSeconds += passedTime / 1000000000.0;
+			this.requestFocus();
 
 			while (unprocessedSeconds > secondsPerTick) {
 				this.tick();
@@ -109,33 +118,30 @@ public class Display extends Canvas implements Runnable {
 					frames = 0;
 				}
 				if (ticked) {
-//					this.render();
+					this.render();
 					frames++;
 				}
-			}
-
 //			this.render();
-
-			this.newX = InputHandler.MouseX;
-
-			if (this.newX > this.oldX) {
-				Controller.turnRight = true;
 			}
-			if (this.newX < this.oldX) {
-				Controller.turnLeft = true;
-			}
-			if (this.newX == this.oldX) {
-				Controller.turnLeft = false;
-				Controller.turnRight = false;
-			}
-
-			MouseSpeed = Math.abs(this.newX - this.oldX);
-			this.oldX = this.newX;
 		}
 	}
 
 	private void tick() {
 		this.game.tick(this.input.key);
+
+		this.newX = InputHandler.MouseX;
+		if (this.newX > this.oldX) {
+			Controller.turnRight = true;
+		}
+		if (this.newX < this.oldX) {
+			Controller.turnLeft = true;
+		}
+		if (this.newX == this.oldX) {
+			Controller.turnLeft = false;
+			Controller.turnRight = false;
+		}
+		MouseSpeed = Math.abs(this.newX - this.oldX);
+		this.oldX = this.newX;
 	}
 
 	private void render() {
@@ -161,7 +167,6 @@ public class Display extends Canvas implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		Display display = new Display();
-		new Launcher(0, display);
+		getLauncherInstance();
 	}
 }

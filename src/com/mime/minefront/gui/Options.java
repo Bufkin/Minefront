@@ -2,40 +2,50 @@ package com.mime.minefront.gui;
 
 import java.awt.Choice;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.mime.minefront.Display;
+import com.mime.minefront.Configuration;
 
-public class Options extends Launcher {
+public class Options extends JFrame {
 
 	private static final long serialVersionUID = -7743258581038005972L;
 
-	private Choice resolution = new Choice();
-
-	private int width = 540;
+	private int width = 550;
 	private int height = 450;
 	private JButton OK;
 	private JTextField twidth, theight;
 	private JLabel lwidth, lheight;
 	private Rectangle rOK, rresolution;
+	private Choice resolution = new Choice();
+	Configuration config = new Configuration();
 
 	int w = 0;
 	int h = 0;
+	private int button_width = 80;
+	private int button_height = 40;
+
+	JFrame frame = new JFrame();
+	JPanel window = new JPanel();
 
 	public Options() {
-		super(1, new Display());
-		this.frame.setTitle("Options - Minefront Launcher");
+		this.setTitle("Options - Minefront Launcher");
 		this.setSize(new Dimension(this.width, this.height));
-		this.frame.setLocationRelativeTo(null);
+		this.add(this.window);
+		this.setLocationRelativeTo(null);
+		this.setResizable(false);
+		this.setVisible(true);
+		this.window.setLayout(null);
 
 		this.drawButtons();
+		this.window.repaint();
 	}
 
 	private void drawButtons() {
@@ -54,12 +64,10 @@ public class Options extends Launcher {
 
 		this.lwidth = new JLabel("Width: ");
 		this.lwidth.setBounds(30, 150, 120, 20);
-		this.lwidth.setFont(new Font("Verdana", 2, 12));
 		this.window.add(this.lwidth);
 
 		this.lheight = new JLabel("Height: ");
 		this.lheight.setBounds(30, 180, 120, 20);
-		this.lheight.setFont(new Font("Verdana", 2, 12));
 		this.window.add(this.lheight);
 
 		this.twidth = new JTextField();
@@ -74,26 +82,8 @@ public class Options extends Launcher {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selection = Options.this.resolution.getSelectedIndex();
-				int w = 0;
-				int h = 0;
-				if (selection == 0) {
-					w = 640;
-					h = 480;
-				}
-				if (selection == 1 || selection == -1) {
-					w = 800;
-					h = 600;
-				}
-				if (selection == 2) {
-					w = 1024;
-					h = 768;
-				}
-
-				Options.this.config.saveConfiguration("width", w);
-				Options.this.config.saveConfiguration("height", h);
-				Options.this.frame.dispose();
-				new Launcher(0, new Display());
+				Options.this.dispose();
+				new Launcher(0);
 				Options.this.config.saveConfiguration("width", Options.this.parseWidth());
 				Options.this.config.saveConfiguration("height", Options.this.parseHeight());
 			}

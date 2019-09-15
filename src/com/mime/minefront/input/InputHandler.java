@@ -87,7 +87,6 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 		if (keyCode > 0 && keyCode < this.key.length) {
 			this.key[keyCode] = true;
 		}
-
 	}
 
 	@Override
@@ -97,5 +96,4 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 			this.key[keyCode] = false;
 		}
 	}
-
 }

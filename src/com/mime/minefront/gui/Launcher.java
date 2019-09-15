@@ -1,10 +1,17 @@
 package com.mime.minefront.gui;
 
+import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferStrategy;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,8 +20,9 @@ import javax.swing.UIManager;
 import com.mime.minefront.Configuration;
 import com.mime.minefront.Display;
 import com.mime.minefront.RunGame;
+import com.mime.minefront.input.InputHandler;
 
-public class Launcher extends JFrame {
+public class Launcher extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 6031394679183022710L;
 
@@ -27,6 +35,9 @@ public class Launcher extends JFrame {
 	private int height = 400;
 	protected int button_width = 80;
 	protected int button_height = 40;
+	boolean running = false;
+	Thread thread;
+	JFrame frame = new JFrame();
 
 	public Launcher(int id, Display display) {
 		try {
@@ -34,22 +45,120 @@ public class Launcher extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.setUndecorated(true);
-		this.setTitle("Minefront Launcher");
-		this.setSize(new Dimension(this.width, this.height));
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		this.getContentPane().add(this.window);
-		this.add(display);
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
-		this.setVisible(true);
+		this.frame.setUndecorated(true);
+		this.frame.setTitle("Minefront Launcher");
+		this.frame.setSize(new Dimension(this.width, this.height));
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.getContentPane().add(this.window);
+		this.frame.add(this);
+		this.frame.setLocationRelativeTo(null);
+		this.frame.setResizable(false);
+		this.frame.setVisible(true);
 		this.window.setLayout(null);
-
 		if (id == 0) {
 			this.drawButtons();
 		}
+		InputHandler input = new InputHandler();
+		this.addKeyListener(input);
+		this.addFocusListener(input);
+		this.addMouseListener(input);
+		this.addMouseMotionListener(input);
+		this.startMenu();
 		display.start();
-		this.repaint();
+		this.frame.repaint();
+	}
+
+	public void updateFrame() {
+		if (InputHandler.dragged) {
+			Point p = this.frame.getLocation();
+			this.setLocation(p.x + InputHandler.MouseDX - InputHandler.MousePX,
+					p.y + InputHandler.MouseDY - InputHandler.MousePY);
+		}
+	}
+
+	public void startMenu() {
+		this.running = true;
+		this.thread = new Thread(this, "menu");
+		this.thread.start();
+	}
+
+	public void stopMenu() {
+		try {
+			this.thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		while (this.running) {
+			this.renderMenu();
+			this.updateFrame();
+		}
+	}
+
+	private void renderMenu() {
+		BufferStrategy bs = this.getBufferStrategy();
+		if (bs == null) {
+			this.createBufferStrategy(3);
+			return;
+		}
+
+		Graphics g = bs.getDrawGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 800, 400);
+		try {
+			g.drawImage(ImageIO.read(Launcher.class.getResource("/menu_image.jpg")), 0, 0, 800, 400, null);
+			if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 && InputHandler.MouseY > 130
+					&& InputHandler.MouseY < 130 + 30) {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/play_on.png")), 690, 130, 80, 30, null);
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 134, 22, 20, null);
+				if (InputHandler.MouseButton == 1) {
+
+				}
+			} else {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/play_off.png")), 690, 130, 80, 30, null);
+			}
+
+			if (InputHandler.MouseX > 641 && InputHandler.MouseX < 641 + 130 && InputHandler.MouseY > 170
+					&& InputHandler.MouseY < 170 + 30) {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/options_on.png")), 641, 170, 130, 30, null);
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 174, 22, 20, null);
+				if (InputHandler.MouseButton == 1) {
+
+				}
+			} else {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/options_off.png")), 641, 170, 130, 30, null);
+			}
+
+			if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 && InputHandler.MouseY > 210
+					&& InputHandler.MouseY < 210 + 30) {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/help_on.png")), 690, 210, 80, 30, null);
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 214, 22, 20, null);
+				if (InputHandler.MouseButton == 1) {
+
+				}
+			} else {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/help_off.png")), 690, 210, 80, 30, null);
+			}
+
+			if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 && InputHandler.MouseY > 250
+					&& InputHandler.MouseY < 250 + 30) {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/exit_on.png")), 690, 250, 80, 30, null);
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 254, 22, 20, null);
+				if (InputHandler.MouseButton == 1) {
+					System.exit(0);
+				}
+			} else {
+				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/exit_off.png")), 690, 250, 80, 30, null);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		g.dispose();
+		bs.show();
 	}
 
 	private void drawButtons() {
@@ -82,7 +191,7 @@ public class Launcher extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Launcher.this.config.loadConfiguration("res/settings/config.xml");
-				Launcher.this.dispose();
+				Launcher.this.frame.dispose();
 				new RunGame();
 			}
 		});
@@ -91,7 +200,7 @@ public class Launcher extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Launcher.this.dispose();
+				Launcher.this.frame.dispose();
 				new Options();
 			}
 		});

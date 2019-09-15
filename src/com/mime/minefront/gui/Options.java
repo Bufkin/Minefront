@@ -31,9 +31,9 @@ public class Options extends Launcher {
 
 	public Options() {
 		super(1, new Display());
-		this.setTitle("Options - Minefront Launcher");
+		this.frame.setTitle("Options - Minefront Launcher");
 		this.setSize(new Dimension(this.width, this.height));
-		this.setLocationRelativeTo(null);
+		this.frame.setLocationRelativeTo(null);
 
 		this.drawButtons();
 	}
@@ -92,7 +92,7 @@ public class Options extends Launcher {
 
 				Options.this.config.saveConfiguration("width", w);
 				Options.this.config.saveConfiguration("height", h);
-				Options.this.dispose();
+				Options.this.frame.dispose();
 				new Launcher(0, new Display());
 				Options.this.config.saveConfiguration("width", Options.this.parseWidth());
 				Options.this.config.saveConfiguration("height", Options.this.parseHeight());

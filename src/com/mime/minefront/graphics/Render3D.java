@@ -13,8 +13,10 @@ public class Render3D extends Render {
 	public double[] zBufferWall;
 	private double renderDistance = 5000;
 	private double forward, right, up, cosine, sine, walking;
-	private int spriteSheetWidth = 24;
+	private int spriteSheetWidth = 128;
 	Random random = new Random();
+
+	int c = 0;
 
 	double h = 0.5;
 
@@ -42,8 +44,8 @@ public class Render3D extends Render {
 
 		for (int y = 0; y < this.height; y++) {
 			double ceiling = (y + -this.height / 2.0) / this.height;
-
 			double z = (floorPosition + this.up) / ceiling;
+			this.c = 0;
 			if (Controller.walk) {
 				this.walking = Math.sin((game.time / 6.0) * 0.5);
 				z = (floorPosition + this.up + this.walking) / ceiling;
@@ -60,6 +62,7 @@ public class Render3D extends Render {
 
 			if (ceiling < 0) {
 				z = (ceilingPosition - this.up) / -ceiling;
+				this.c = 1;
 				if (Controller.walk) {
 					z = (ceilingPosition - this.up - this.walking) / -ceiling;
 				}
@@ -70,10 +73,16 @@ public class Render3D extends Render {
 				depth *= z;
 				double xx = depth * this.cosine + z * this.sine;
 				double yy = z * this.cosine - depth * this.sine;
-				int xPix = (int) (xx + this.right);
-				int yPix = (int) (yy + this.forward);
+				int xPix = (int) ((xx + this.right) * 4);
+				int yPix = (int) ((yy + this.forward) * 4);
 				this.zBuffer[x + y * this.width] = z;
-				this.pixels[x + y * this.width] = Texture.floor.pixels[(xPix & 7) + (yPix & 7) * this.spriteSheetWidth];
+				if (this.c == 0) {
+					this.pixels[x + y * this.width] = Texture.block.pixels[(xPix & 30) + 32
+							+ (yPix & 30) * this.spriteSheetWidth];
+				} else {
+					this.pixels[x + y * this.width] = Texture.block.pixels[(xPix & 30)
+							+ (yPix & 30) * this.spriteSheetWidth];
+				}
 
 				if (z > 500) {
 					this.pixels[x + y * this.width] = 0;
@@ -191,17 +200,19 @@ public class Render3D extends Render {
 
 		rotZ *= 8;
 
+		System.out.println("ypl: " + ypl + " ypr: " + ypr);
+
 		for (int yp = ypl; yp < ypr; yp++) {
 
 			double pixelRotationY = (yp - yPixelR) / (yPixelL - yPixelR);
-			int yTexture = (int) (pixelRotationY * 8);
+			int yTexture = (int) (pixelRotationY * 8 * 4);
 
 			for (int xp = xpl; xp < xpr; xp++) {
 				double pixelRotationX = (xp - xPixelR) / (xPixelL - xPixelR);
-				int xTexture = (int) (pixelRotationX * 8);
+				int xTexture = (int) (pixelRotationX * 8 * 4);
 
 				if (this.zBuffer[xp + yp * this.width] > rotZ) {
-					int col = Texture.floor.pixels[((xTexture & 7) + 16) + (yTexture & 7) * this.spriteSheetWidth];
+					int col = Texture.block.pixels[((xTexture & 30) + 96) + (yTexture & 30) * this.spriteSheetWidth];
 					if (col != 0xFFFF00FF) {
 						this.pixels[xp + yp * this.width] = col;
 						this.zBuffer[xp + yp * this.width] = rotZ;
@@ -294,7 +305,7 @@ public class Render3D extends Render {
 			}
 			this.zBufferWall[x] = zWall;
 
-			int xTexture = (int) ((tex3 + tex4 * pixelRotation) / zWall);
+			int xTexture = (int) ((tex3 + tex4 * pixelRotation) / zWall * 4);
 
 			double yPixelTop = yPixelLeftTop + (yPixelRightTop - yPixelLeftTop) * pixelRotation;
 			double yPixelBottom = yPixelLeftBottom + (yPixelRightBottom - yPixelLeftBottom) * pixelRotation;
@@ -313,10 +324,10 @@ public class Render3D extends Render {
 			for (int y = yPixelTopInt; y < yPixelBottomInt; y++) {
 				double pixelRotationY = (y - yPixelTop) / (yPixelBottom - yPixelTop);
 
-				int yTexture = (int) (8 * pixelRotationY);
+				int yTexture = (int) (8 * pixelRotationY * 4);
 
-				this.pixels[x + y * this.width] = Texture.floor.pixels[((xTexture & 7) + 8)
-						+ (yTexture & 7) * this.spriteSheetWidth];
+				this.pixels[x + y * this.width] = Texture.block.pixels[((xTexture & 31) + 64)
+						+ (yTexture & 31) * this.spriteSheetWidth];
 				this.zBuffer[x + y * this.width] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;
 			}
 		}

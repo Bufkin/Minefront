@@ -1,5 +1,7 @@
 package com.mime.minefront.graphics;
 
+import java.util.Random;
+
 import com.mime.minefront.Game;
 import com.mime.minefront.input.Controller;
 import com.mime.minefront.level.Block;
@@ -11,6 +13,10 @@ public class Render3D extends Render {
 	public double[] zBufferWall;
 	private double renderDistance = 5000;
 	private double forward, right, up, cosine, sine, walking;
+	private int spriteSheetWidth = 24;
+	Random random = new Random();
+
+	double h = 0.5;
 
 	public Render3D(int width, int height) {
 		super(width, height);
@@ -67,7 +73,11 @@ public class Render3D extends Render {
 				int xPix = (int) (xx + this.right);
 				int yPix = (int) (yy + this.forward);
 				this.zBuffer[x + y * this.width] = z;
-				this.pixels[x + y * this.width] = Texture.floor.pixels[(xPix & 7) + (yPix & 7) * 16];
+				this.pixels[x + y * this.width] = Texture.floor.pixels[(xPix & 7) + (yPix & 7) * this.spriteSheetWidth];
+
+				if (z > 500) {
+					this.pixels[x + y * this.width] = 0;
+				}
 			}
 		}
 		Level level = game.level;
@@ -95,6 +105,7 @@ public class Render3D extends Render {
 				}
 			}
 		}
+
 		for (int xBlock = -size; xBlock <= size; xBlock++) {
 			for (int zBlock = -size; zBlock <= size; zBlock++) {
 				Block block = level.create(xBlock, zBlock);
@@ -114,6 +125,86 @@ public class Render3D extends Render {
 					}
 					if (south.solid) {
 						this.renderWall(xBlock, xBlock + 1, zBlock + 1, zBlock + 1, 0.5);
+					}
+				}
+			}
+		}
+
+		for (int xBlock = -size; xBlock <= size; xBlock++) {
+			for (int zBlock = -size; zBlock <= size; zBlock++) {
+				Block block = level.create(xBlock, zBlock);
+				for (int s = 0; s < block.sprites.size(); s++) {
+					Sprite sprite = block.sprites.get(s);
+
+					this.renderSprite(xBlock + sprite.x, sprite.y, zBlock + sprite.z, 0.5);
+				}
+			}
+		}
+	}
+
+	public void renderSprite(double x, double y, double z, double hoffset) {
+		double upCorrect = -0.125;
+		double rightCorrect = 0.0625;
+		double forwardCorrect = 0.0625;
+		double walkCorrect = 0.0625;
+
+		double xc = ((x / 2) - (this.right * rightCorrect)) * 2;
+		double yc = ((y / 2) - (this.up * upCorrect)) + (this.walking * walkCorrect) * 2 + hoffset;
+		double zc = ((z / 2) - (this.forward * forwardCorrect)) * 2;
+
+		double rotX = xc * this.cosine - zc * this.sine;
+		double rotY = yc;
+		double rotZ = zc * this.cosine + xc * this.sine;
+
+		double xCentre = 400.0;
+		double yCentre = 300.0;
+
+		double xPixel = rotX / rotZ * this.height + xCentre;
+		double yPixel = rotY / rotZ * this.height + yCentre;
+
+		double xPixelL = xPixel - this.height / 2 / rotZ;
+		double xPixelR = xPixel + this.height / 2 / rotZ;
+
+		double yPixelL = yPixel - this.height / 2 / rotZ;
+		double yPixelR = yPixel + this.height / 2 / rotZ;
+
+		int xpl = (int) xPixelL;
+		int xpr = (int) xPixelR;
+		int ypl = (int) yPixelL;
+		int ypr = (int) yPixelR;
+
+		if (xpl < 0) {
+			xpl = 0;
+		}
+
+		if (xpr > this.width) {
+			xpr = this.width;
+		}
+
+		if (ypl < 0) {
+			ypl = 0;
+		}
+
+		if (ypr > this.height) {
+			ypr = this.height;
+		}
+
+		rotZ *= 8;
+
+		for (int yp = ypl; yp < ypr; yp++) {
+
+			double pixelRotationY = (yp - yPixelR) / (yPixelL - yPixelR);
+			int yTexture = (int) (pixelRotationY * 8);
+
+			for (int xp = xpl; xp < xpr; xp++) {
+				double pixelRotationX = (xp - xPixelR) / (xPixelL - xPixelR);
+				int xTexture = (int) (pixelRotationX * 8);
+
+				if (this.zBuffer[xp + yp * this.width] > rotZ) {
+					int col = Texture.floor.pixels[((xTexture & 7) + 16) + (yTexture & 7) * this.spriteSheetWidth];
+					if (col != 0xFFFF00FF) {
+						this.pixels[xp + yp * this.width] = col;
+						this.zBuffer[xp + yp * this.width] = rotZ;
 					}
 				}
 			}
@@ -224,7 +315,8 @@ public class Render3D extends Render {
 
 				int yTexture = (int) (8 * pixelRotationY);
 
-				this.pixels[x + y * this.width] = Texture.floor.pixels[((xTexture & 7) + 8) + (yTexture & 7) * 16];
+				this.pixels[x + y * this.width] = Texture.floor.pixels[((xTexture & 7) + 8)
+						+ (yTexture & 7) * this.spriteSheetWidth];
 				this.zBuffer[x + y * this.width] = 1 / (tex1 + (tex2 - tex1) * pixelRotation) * 8;
 			}
 		}

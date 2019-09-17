@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.mime.minefront.Display;
 import com.mime.minefront.Game;
-import com.mime.minefront.input.Controller;
+import com.mime.minefront.entity.mob.Player;
 import com.mime.minefront.level.Block;
 import com.mime.minefront.level.Level;
 
@@ -35,11 +35,11 @@ public class Render3D extends Render {
 
 		double floorPosition = 8;
 		double ceilingPosition = 8;
-		this.forward = game.controls.z;
-		this.right = game.controls.x;
-		this.up = game.controls.y;
+		this.forward = game.player.z;
+		this.right = game.player.x;
+		this.up = game.player.y;
 		this.walking = 0.0;
-		double rotation = game.controls.rotation; // Math.sin(game.time / 10.0) / 10;
+		double rotation = game.player.rotation; // Math.sin(game.time / 10.0) / 10;
 		this.cosine = Math.cos(rotation);
 		this.sine = Math.sin(rotation);
 
@@ -47,16 +47,16 @@ public class Render3D extends Render {
 			double ceiling = (y + -this.height / 2.0) / this.height;
 			double z = (floorPosition + this.up) / ceiling;
 			this.c = 0;
-			if (Controller.walk) {
+			if (Player.walk) {
 				this.walking = Math.sin((game.time / 6.0) * 0.5);
 				z = (floorPosition + this.up + this.walking) / ceiling;
 			}
 
-			if (Controller.crouchWalk && Controller.walk) {
+			if (Player.crouchWalk && Player.walk) {
 				this.walking = Math.sin((game.time / 6.0) * 0.25);
 				z = (floorPosition + this.up + this.walking) / ceiling;
 			}
-			if (Controller.runWalk && Controller.walk) {
+			if (Player.runWalk && Player.walk) {
 				this.walking = Math.sin((game.time / 6.0) * 0.8);
 				z = (floorPosition + this.up + this.walking) / ceiling;
 			}
@@ -64,7 +64,7 @@ public class Render3D extends Render {
 			if (ceiling < 0) {
 				z = (ceilingPosition - this.up) / -ceiling;
 				this.c = 1;
-				if (Controller.walk) {
+				if (Player.walk) {
 					z = (ceilingPosition - this.up - this.walking) / -ceiling;
 				}
 			}

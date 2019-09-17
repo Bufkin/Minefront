@@ -17,7 +17,7 @@ public class RunGame {
 		frame.add(game);
 		frame.pack();
 		frame.setSize(Display.getGameWidth(), Display.getGameHeight());
-//		frame.getContentPane().setCursor(blank);
+		frame.getContentPane().setCursor(blank);
 		frame.setTitle(Display.TITLE);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);

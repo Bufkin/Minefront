@@ -9,9 +9,9 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+import com.mime.minefront.entity.mob.Player;
 import com.mime.minefront.graphics.Screen;
 import com.mime.minefront.gui.Launcher;
-import com.mime.minefront.input.Controller;
 import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable {
@@ -43,11 +43,11 @@ public class Display extends Canvas implements Runnable {
 		this.setMaximumSize(size);
 
 		this.screen = new Screen(Display.getGameWidth(), Display.getGameHeight());
-		this.game = new Game();
+		this.input = new InputHandler();
+		this.game = new Game(this.input);
 		this.img = new BufferedImage(Display.getGameWidth(), Display.getGameHeight(), BufferedImage.TYPE_INT_RGB);
 		this.pixels = ((DataBufferInt) this.img.getRaster().getDataBuffer()).getData();
 
-		this.input = new InputHandler();
 		this.addKeyListener(this.input);
 		this.addFocusListener(this.input);
 		this.addMouseListener(this.input);
@@ -93,52 +93,48 @@ public class Display extends Canvas implements Runnable {
 
 	@Override
 	public void run() {
-		int frames = 0;
-		double unprocessedSeconds = 0;
 		long previousTime = System.nanoTime();
-		double secondsPerTick = 1 / 60.0;
-		int tickCount = 0;
-		boolean ticked = false;
+		double ns = 1000000000.0 / 60.0;
+		double delta = 0;
+		int frames = 0;
+		long timer = System.currentTimeMillis();
+		this.requestFocus();
 
 		while (this.running) {
 			long currentTime = System.nanoTime();
-			long passedTime = currentTime - previousTime;
+			delta += (currentTime - previousTime) / ns;
 			previousTime = currentTime;
-			unprocessedSeconds += passedTime / 1000000000.0;
-			this.requestFocus();
 
-			while (unprocessedSeconds > secondsPerTick) {
+			if (delta >= 1) {
 				this.tick();
-				unprocessedSeconds -= secondsPerTick;
-				ticked = true;
-				tickCount++;
-				if (tickCount % 60 == 0) {
-					this.fps = frames;
-					previousTime += 1000;
-					frames = 0;
-				}
-				if (ticked) {
-					this.render();
-					frames++;
-				}
-//			this.render();
+				delta--;
+			}
+
+			this.render();
+			frames++;
+
+			while (System.currentTimeMillis() - timer > 1000) {
+				timer += 1000;
+				this.fps = frames;
+				frames = 0;
 			}
 		}
 	}
 
 	private void tick() {
-		this.game.tick(this.input.key);
+		this.input.tick();
+		this.game.tick();
 
 		this.newX = InputHandler.MouseX;
 		if (this.newX > this.oldX) {
-			Controller.turnRight = true;
+			Player.turnRight = true;
 		}
 		if (this.newX < this.oldX) {
-			Controller.turnLeft = true;
+			Player.turnLeft = true;
 		}
 		if (this.newX == this.oldX) {
-			Controller.turnLeft = false;
-			Controller.turnRight = false;
+			Player.turnLeft = false;
+			Player.turnRight = false;
 		}
 		MouseSpeed = Math.abs(this.newX - this.oldX);
 		this.oldX = this.newX;

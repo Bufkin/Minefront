@@ -20,6 +20,18 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 	public static boolean dragged = false;
 	public static int MouseButton;
 
+	public boolean forward, back, left, right, jump, crouch, run;
+
+	public void tick() {
+		this.forward = this.key[KeyEvent.VK_W];
+		this.back = this.key[KeyEvent.VK_S];
+		this.left = this.key[KeyEvent.VK_A];
+		this.right = this.key[KeyEvent.VK_D];
+		this.jump = this.key[KeyEvent.VK_SPACE];
+		this.crouch = this.key[KeyEvent.VK_CONTROL];
+		this.run = this.key[KeyEvent.VK_SHIFT];
+	}
+
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		MouseDX = e.getX();

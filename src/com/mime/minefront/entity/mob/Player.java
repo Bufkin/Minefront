@@ -1,44 +1,57 @@
-package com.mime.minefront.input;
+package com.mime.minefront.entity.mob;
 
 import com.mime.minefront.Display;
+import com.mime.minefront.input.InputHandler;
 
-public class Controller {
+public class Player extends Mob {
 
-	public double x, y, z, rotation, xa, za, rotationa;
+	public double y, rotation, xa, za, rotationa;
 	public static boolean turnLeft = false;
 	public static boolean turnRight = false;
 	public static boolean walk = false;
 	public static boolean crouchWalk = false;
 	public static boolean runWalk = false;
 
-	public void tick(boolean forward, boolean back, boolean left, boolean right, boolean jump, boolean crouch,
-			boolean run) {
+	private InputHandler input;
+
+	public Player(InputHandler input) {
+		this.input = input;
+	}
+
+	@Override
+	public void tick() {
 		double rotationSpeed = 0.002 * Display.MouseSpeed;
 		double walkSpeed = 0.5;
 		double jumpHeight = 0.5;
 		double crouchHeight = 0.35;
-		double xMove = 0;
-		double zMove = 0;
+		int xa = 0;
+		int za = 0;
 
-		if (forward) {
-			zMove++;
+		if (this.input.forward) {
+			za++;
 			walk = true;
 		}
 
-		if (back) {
-			zMove--;
+		if (this.input.back) {
+			za--;
 			walk = true;
 		}
 
-		if (left) {
-			xMove--;
+		if (this.input.left) {
+			xa--;
 			walk = true;
 		}
 
-		if (right) {
-			xMove++;
+		if (this.input.right) {
+			xa++;
 			walk = true;
 		}
+
+		if (xa != 0 || za != 0) {
+			this.move(xa, za, this.rotation);
+		}
+		this.rotation += this.rotationa;
+		this.rotationa *= 0.5;
 
 		if (turnLeft) {
 			this.rotationa -= rotationSpeed;
@@ -48,44 +61,35 @@ public class Controller {
 			this.rotationa += rotationSpeed;
 		}
 
-		if (jump) {
+		if (this.input.jump) {
 			this.y += jumpHeight;
 		}
 
-		if (crouch) {
+		if (this.input.crouch) {
 			this.y -= crouchHeight;
-			run = false;
+			this.input.run = false;
 			crouchWalk = true;
 			walkSpeed = 0.2;
 		}
 
-		if (run) {
+		if (this.input.run) {
 			walkSpeed = 1;
 			walk = true;
 			runWalk = true;
 		}
 
-		if (!forward && !back && !left && !right && !run) {
+		if (!this.input.forward && !this.input.back && !this.input.left && !this.input.right && !this.input.run) {
 			walk = false;
 		}
 
-		if (!crouch) {
+		if (!this.input.crouch) {
 			crouchWalk = false;
 		}
 
-		if (!run) {
+		if (!this.input.run) {
 			runWalk = false;
 		}
 
-		this.xa += (xMove * Math.cos(this.rotation) + zMove * Math.sin(this.rotation)) * walkSpeed;
-		this.za += (zMove * Math.cos(this.rotation) - xMove * Math.sin(this.rotation)) * walkSpeed;
-
-		this.x += this.xa;
 		this.y *= 0.9;
-		this.z += this.za;
-		this.xa *= 0.1;
-		this.za *= 0.1;
-		this.rotation += this.rotationa;
-		this.rotationa *= 0.8;
 	}
 }

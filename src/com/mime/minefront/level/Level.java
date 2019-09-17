@@ -23,7 +23,7 @@ public class Level {
 		this.generateLevel();
 	}
 
-	public void update() {
+	public void tick() {
 		for (int i = 0; i < this.entities.size(); i++) {
 			this.entities.get(i).tick();
 		}
@@ -37,11 +37,11 @@ public class Level {
 		for (int y = 0; y < this.height; y++) {
 			for (int x = 0; x < this.width; x++) {
 				Block block = null;
-				if (this.random.nextInt(18) == 0) {
+				if (this.random.nextInt(28) == 0) {
 					block = new SolidBlock();
 				} else {
 					block = new Block();
-					if (this.random.nextInt(15) == 0) {
+					if (this.random.nextInt(25) == 0) {
 						block.addSprite(new Sprite(0, 0, 0));
 					}
 				}

@@ -2,6 +2,7 @@ package com.mime.minefront.graphics;
 
 import java.util.Random;
 
+import com.mime.minefront.Display;
 import com.mime.minefront.Game;
 import com.mime.minefront.input.Controller;
 import com.mime.minefront.level.Block;
@@ -165,8 +166,8 @@ public class Render3D extends Render {
 		double rotY = yc;
 		double rotZ = zc * this.cosine + xc * this.sine;
 
-		double xCentre = 400.0;
-		double yCentre = 300.0;
+		double xCentre = Display.width / 2; // 400.0;
+		double yCentre = Display.height / 2; // 300.0;
 
 		double xPixel = rotX / rotZ * this.height + xCentre;
 		double yPixel = rotY / rotZ * this.height + yCentre;
@@ -199,8 +200,6 @@ public class Render3D extends Render {
 		}
 
 		rotZ *= 8;
-
-		System.out.println("ypl: " + ypl + " ypr: " + ypr);
 
 		for (int yp = ypl; yp < ypr; yp++) {
 

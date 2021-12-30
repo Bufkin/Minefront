@@ -6,16 +6,15 @@ import com.mime.minefront.Game;
 
 public class Screen extends Render {
 
-	private Render test;
-	private Render3D render;
+	private final Render3D render;
 
 	public Screen(int width, int height) {
 		super(width, height);
 		Random random = new Random();
 		this.render = new Render3D(width, height);
-		this.test = new Render(256, 256);
+		Render test = new Render(256, 256);
 		for (int i = 0; i < 256 * 256; i++) {
-			this.test.pixels[i] = random.nextInt() * (random.nextInt(5) / 4);
+			test.pixels[i] = random.nextInt() * (random.nextInt(5) / 4);
 		}
 	}
 

@@ -12,9 +12,9 @@ public class Render3D extends Render {
 
 	public double[] zBuffer;
 	public double[] zBufferWall;
-	private double renderDistance = 5000;
+	private final double renderDistance = 5000;
 	private double forward, right, up, cosine, sine, walking;
-	private int spriteSheetWidth = 128;
+	private final int spriteSheetWidth = 128;
 	Random random = new Random();
 
 	int c = 0;
@@ -163,20 +163,19 @@ public class Render3D extends Render {
 		double zc = ((z / 2) - (this.forward * forwardCorrect)) * 2;
 
 		double rotX = xc * this.cosine - zc * this.sine;
-		double rotY = yc;
 		double rotZ = zc * this.cosine + xc * this.sine;
 
-		double xCentre = Display.width / 2; // 400.0;
-		double yCentre = Display.height / 2; // 300.0;
+		double xCentre = (double)Display.width / 2; // 400.0;
+		double yCentre = (double)Display.height / 2; // 300.0;
 
 		double xPixel = rotX / rotZ * this.height + xCentre;
-		double yPixel = rotY / rotZ * this.height + yCentre;
+		double yPixel = yc / rotZ * this.height + yCentre;
 
-		double xPixelL = xPixel - this.height / 2 / rotZ;
-		double xPixelR = xPixel + this.height / 2 / rotZ;
+		double xPixelL = xPixel -  (double) this.height / 2 / rotZ;
+		double xPixelR = xPixel +  (double) this.height / 2 / rotZ;
 
-		double yPixelL = yPixel - this.height / 2 / rotZ;
-		double yPixelR = yPixel + this.height / 2 / rotZ;
+		double yPixelL = yPixel -  (double) this.height / 2 / rotZ;
+		double yPixelR = yPixel +  (double) this.height / 2 / rotZ;
 
 		int xpl = (int) xPixelL;
 		int xpr = (int) xPixelR;
@@ -233,7 +232,7 @@ public class Render3D extends Render {
 
 		double rotLeftSideX = xcLeft * this.cosine - zcLeft * this.sine;
 		double yCornerTL = ((-yHeight) - (-this.up * upCorrect + (this.walking * walkCorrect))) * 2.0;
-		double yCornerBL = ((+0.5 - yHeight) - (-this.up * upCorrect + (this.walking * walkCorrect))) * 2.0;
+		double yCornerBL = ((0.5 - yHeight) - (-this.up * upCorrect + (this.walking * walkCorrect))) * 2.0;
 		double rotLeftSideZ = zcLeft * this.cosine + xcLeft * this.sine;
 
 		// Right side
@@ -242,7 +241,7 @@ public class Render3D extends Render {
 
 		double rotRightSideX = xcRight * this.cosine - zcRight * this.sine;
 		double yCornerTR = ((-yHeight) - (-this.up * upCorrect + (this.walking * walkCorrect))) * 2.0;
-		double yCornerBR = ((+0.5 - yHeight) - (-this.up * upCorrect + (this.walking * walkCorrect))) * 2.0;
+		double yCornerBR = ((0.5 - yHeight) - (-this.up * upCorrect + (this.walking * walkCorrect))) * 2.0;
 		double rotRightSideZ = zcRight * this.cosine + xcRight * this.sine;
 
 		double tex30 = 0;

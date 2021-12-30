@@ -14,7 +14,7 @@ public class Level {
 	public final int height;
 	final Random random = new Random();
 
-	private List<Entity> entities = new ArrayList<>();
+	private final List<Entity> entities = new ArrayList<>();
 
 	public Level(int width, int height) {
 		this.width = width;
@@ -36,7 +36,7 @@ public class Level {
 	private void generateLevel() {
 		for (int y = 0; y < this.height; y++) {
 			for (int x = 0; x < this.width; x++) {
-				Block block = null;
+				Block block;
 				if (this.random.nextInt(28) == 0) {
 					block = new SolidBlock();
 				} else {

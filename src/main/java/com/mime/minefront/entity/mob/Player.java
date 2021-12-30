@@ -12,7 +12,7 @@ public class Player extends Mob {
 	public static boolean crouchWalk = false;
 	public static boolean runWalk = false;
 
-	private InputHandler input;
+	private final InputHandler input;
 
 	public Player(InputHandler input) {
 		this.input = input;

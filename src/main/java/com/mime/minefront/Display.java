@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.Serial;
 
 import com.mime.minefront.entity.mob.Player;
 import com.mime.minefront.graphics.Screen;
@@ -15,6 +16,7 @@ import com.mime.minefront.gui.Launcher;
 import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable {
+	@Serial
 	private static final long serialVersionUID = -346504722713325956L;
 
 	public static int width = 800;
@@ -22,12 +24,12 @@ public class Display extends Canvas implements Runnable {
 	public static final String TITLE = "Minefront Pre-Alpha 0.02";
 
 	private Thread thread;
-	private Screen screen;
-	private Game game;
-	private BufferedImage img;
+	private final Screen screen;
+	private final Game game;
+	private final BufferedImage img;
 	private boolean running = false;
-	private int[] pixels;
-	private InputHandler input;
+	private final int[] pixels;
+	private final InputHandler input;
 	private int newX = 0;
 	private int oldX = 0;
 	private int fps;
@@ -149,8 +151,8 @@ public class Display extends Canvas implements Runnable {
 
 		this.screen.render(this.game);
 
-		for (int i = 0; i < Display.getGameWidth() * Display.getGameHeight(); i++) {
-			this.pixels[i] = this.screen.pixels[i];
+		if (Display.getGameWidth() * Display.getGameHeight() >= 0) {
+			System.arraycopy(this.screen.pixels, 0, this.pixels, 0, Display.getGameWidth() * Display.getGameHeight());
 		}
 
 		Graphics g = bs.getDrawGraphics();

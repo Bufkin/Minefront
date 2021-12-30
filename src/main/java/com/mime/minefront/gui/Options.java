@@ -18,8 +18,8 @@ public class Options extends JFrame {
 
 	private static final long serialVersionUID = -7743258581038005972L;
 
-	private int width = 550;
-	private int height = 450;
+	private final int width = 550;
+	private final int height = 450;
 	private JButton OK;
 	private JTextField twidth, theight;
 	private JLabel lwidth, lheight;
@@ -29,8 +29,8 @@ public class Options extends JFrame {
 
 	int w = 0;
 	int h = 0;
-	private int button_width = 80;
-	private int button_height = 40;
+	private final int button_width = 80;
+	private final int button_height = 40;
 
 	JFrame frame = new JFrame();
 	JPanel window = new JPanel();
@@ -78,15 +78,11 @@ public class Options extends JFrame {
 		this.theight.setBounds(80, 180, 60, 20);
 		this.window.add(this.theight);
 
-		this.OK.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Options.this.dispose();
-				new Launcher(0);
-				Options.this.config.saveConfiguration("width", Options.this.parseWidth());
-				Options.this.config.saveConfiguration("height", Options.this.parseHeight());
-			}
+		this.OK.addActionListener(e -> {
+			Options.this.dispose();
+			new Launcher(0);
+			Options.this.config.saveConfiguration("width", Options.this.parseWidth());
+			Options.this.config.saveConfiguration("height", Options.this.parseHeight());
 		});
 	}
 
@@ -110,8 +106,7 @@ public class Options extends JFrame {
 
 	private int parseWidth() {
 		try {
-			int w = Integer.parseInt(this.twidth.getText());
-			return w;
+			return Integer.parseInt(this.twidth.getText());
 		} catch (NumberFormatException e) {
 			this.drop();
 			return this.w;
@@ -120,8 +115,7 @@ public class Options extends JFrame {
 
 	private int parseHeight() {
 		try {
-			int h = Integer.parseInt(this.theight.getText());
-			return h;
+			return Integer.parseInt(this.theight.getText());
 		} catch (NumberFormatException e) {
 			this.drop();
 			return this.h;

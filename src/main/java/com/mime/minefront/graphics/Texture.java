@@ -1,6 +1,7 @@
 package com.mime.minefront.graphics;
 
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
@@ -11,7 +12,7 @@ public class Texture {
 	public static Render loadBitMap(String fileName) {
 
 		try {
-			BufferedImage image = ImageIO.read(Texture.class.getResource(fileName));
+			BufferedImage image = ImageIO.read(Objects.requireNonNull(Texture.class.getResource(fileName)));
 			int width = image.getWidth();
 			int height = image.getHeight();
 			Render result = new Render(width, height);

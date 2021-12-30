@@ -1,4 +1,4 @@
-package com.mime.minefront.gui;
+package main.java.com.mime.minefront.gui;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -6,10 +6,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.io.Serial;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -23,15 +23,13 @@ import com.mime.minefront.input.InputHandler;
 
 public class Launcher extends Canvas implements Runnable {
 
+	@Serial
 	private static final long serialVersionUID = 6031394679183022710L;
 
 	protected JPanel window = new JPanel();
-	private JButton play, options, help, quit;
-	private Rectangle rplay, roptions, rhelp, rquit;
 	Configuration config = new Configuration();
 
-	private int width = 800;
-	private int height = 400;
+	private final int width = 800;
 	protected int button_width = 80;
 	protected int button_height = 40;
 	boolean running = false;
@@ -46,7 +44,8 @@ public class Launcher extends Canvas implements Runnable {
 		}
 		this.frame.setUndecorated(true);
 		this.frame.setTitle("Minefront Launcher");
-		this.frame.setSize(new Dimension(this.width, this.height));
+		int height = 400;
+		this.frame.setSize(new Dimension(this.width, height));
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		frame.getContentPane().add(this.window);
 		this.frame.add(this);
@@ -111,51 +110,48 @@ public class Launcher extends Canvas implements Runnable {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 800, 400);
 		try {
-			g.drawImage(ImageIO.read(Launcher.class.getResource("/menu_image.jpg")), 0, 0, 800, 400, null);
+			g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu_image.jpg"))), 0, 0, 800, 400, null);
 			if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 && InputHandler.MouseY > 130
 					&& InputHandler.MouseY < 130 + 30) {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/play_on.png")), 690, 130, 80, 30, null);
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 134, 22, 20, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/play_on.png"))), 690, 130, 80, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/arrow.png"))), 690 + 80, 134, 22, 20, null);
 				if (InputHandler.MouseButton == 1) {
 					this.config.loadConfiguration("res/settings/config.xml");
 					this.frame.dispose();
 					new RunGame();
 				}
 			} else {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/play_off.png")), 690, 130, 80, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/play_off.png"))), 690, 130, 80, 30, null);
 			}
 
 			if (InputHandler.MouseX > 641 && InputHandler.MouseX < 641 + 130 && InputHandler.MouseY > 170
 					&& InputHandler.MouseY < 170 + 30) {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/options_on.png")), 641, 170, 130, 30, null);
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 174, 22, 20, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/options_on.png"))), 641, 170, 130, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/arrow.png"))), 690 + 80, 174, 22, 20, null);
 				if (InputHandler.MouseButton == 1) {
-					new Options();
+					new com.mime.minefront.gui.Options();
 				}
 			} else {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/options_off.png")), 641, 170, 130, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/options_off.png"))), 641, 170, 130, 30, null);
 			}
 
 			if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 && InputHandler.MouseY > 210
 					&& InputHandler.MouseY < 210 + 30) {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/help_on.png")), 690, 210, 80, 30, null);
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 214, 22, 20, null);
-				if (InputHandler.MouseButton == 1) {
-
-				}
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/help_on.png"))), 690, 210, 80, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/arrow.png"))), 690 + 80, 214, 22, 20, null);
 			} else {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/help_off.png")), 690, 210, 80, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/help_off.png"))), 690, 210, 80, 30, null);
 			}
 
 			if (InputHandler.MouseX > 690 && InputHandler.MouseX < 690 + 80 && InputHandler.MouseY > 250
 					&& InputHandler.MouseY < 250 + 30) {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/exit_on.png")), 690, 250, 80, 30, null);
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/arrow.png")), 690 + 80, 254, 22, 20, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/exit_on.png"))), 690, 250, 80, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/arrow.png"))), 690 + 80, 254, 22, 20, null);
 				if (InputHandler.MouseButton == 1) {
 					System.exit(0);
 				}
 			} else {
-				g.drawImage(ImageIO.read(Launcher.class.getResource("/menu/exit_off.png")), 690, 250, 80, 30, null);
+				g.drawImage(ImageIO.read(Objects.requireNonNull(Launcher.class.getResource("/menu/exit_off.png"))), 690, 250, 80, 30, null);
 			}
 
 		} catch (IOException e) {
@@ -166,64 +162,45 @@ public class Launcher extends Canvas implements Runnable {
 	}
 
 	private void drawButtons() {
-		this.play = new JButton("Play!");
-		this.rplay = new Rectangle((this.width / 2) - (this.button_width / 2), 80, this.button_width,
+		JButton play = new JButton("Play!");
+		Rectangle rplay = new Rectangle((this.width / 2) - (this.button_width / 2), 80, this.button_width,
 				this.button_height);
-		this.play.setBounds(this.rplay);
-		this.window.add(this.play);
+		play.setBounds(rplay);
+		this.window.add(play);
 
-		this.options = new JButton("Options!");
-		this.roptions = new Rectangle((this.width / 2) - (this.button_width / 2), 130, this.button_width,
+		JButton options = new JButton("Options!");
+		Rectangle roptions = new Rectangle((this.width / 2) - (this.button_width / 2), 130, this.button_width,
 				this.button_height);
-		this.options.setBounds(this.roptions);
-		this.window.add(this.options);
+		options.setBounds(roptions);
+		this.window.add(options);
 
-		this.help = new JButton("Help!");
-		this.rhelp = new Rectangle((this.width / 2) - (this.button_width / 2), 180, this.button_width,
+		JButton help = new JButton("Help!");
+		Rectangle rhelp = new Rectangle((this.width / 2) - (this.button_width / 2), 180, this.button_width,
 				this.button_height);
-		this.help.setBounds(this.rhelp);
-		this.window.add(this.help);
+		help.setBounds(rhelp);
+		this.window.add(help);
 
-		this.quit = new JButton("Quit!");
-		this.rquit = new Rectangle((this.width / 2) - (this.button_width / 2), 230, this.button_width,
+		JButton quit = new JButton("Quit!");
+		Rectangle rquit = new Rectangle((this.width / 2) - (this.button_width / 2), 230, this.button_width,
 				this.button_height);
-		this.quit.setBounds(this.rquit);
-		this.window.add(this.quit);
+		quit.setBounds(rquit);
+		this.window.add(quit);
 
-		this.play.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Launcher.this.config.loadConfiguration("res/settings/config.xml");
-				Launcher.this.frame.dispose();
-				new RunGame();
-			}
+		play.addActionListener(e -> {
+			Launcher.this.config.loadConfiguration("res/settings/config.xml");
+			Launcher.this.frame.dispose();
+			new RunGame();
 		});
 
-		this.options.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Launcher.this.frame.dispose();
-				new Options();
-			}
+		options.addActionListener(e -> {
+			Launcher.this.frame.dispose();
+			new Options();
 		});
 
-		this.help.addActionListener(new ActionListener() {
+		help.addActionListener(e -> {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
 		});
 
-		this.quit.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		quit.addActionListener(e -> System.exit(0));
 	}
-
 }

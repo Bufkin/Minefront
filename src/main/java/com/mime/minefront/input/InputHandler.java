@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 
 public class InputHandler implements KeyListener, FocusListener, MouseListener, MouseMotionListener {
 
@@ -82,9 +83,7 @@ public class InputHandler implements KeyListener, FocusListener, MouseListener, 
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		for (int i = 0; i < this.key.length; i++) {
-			this.key[i] = false;
-		}
+		Arrays.fill(this.key, false);
 	}
 
 	@Override

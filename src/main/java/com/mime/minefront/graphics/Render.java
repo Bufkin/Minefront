@@ -1,4 +1,4 @@
-package com.mime.minefront.graphics;
+package main.java.com.mime.minefront.graphics;
 
 public class Render {
 

@@ -1,8 +1,8 @@
-package com.mime.minefront.level;
+package main.java.com.mime.minefront.level;
 
 public class SolidBlock extends Block {
 
-	public SolidBlock() {
-		this.solid = true;
-	}
+  public SolidBlock() {
+    this.solid = true;
+  }
 }

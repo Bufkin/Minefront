@@ -1,19 +1,15 @@
-package com.mime.minefront;
+package main.java.com.mime.minefront;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
+import main.java.com.mime.minefront.entity.mob.Player;
+import main.java.com.mime.minefront.graphics.Screen;
+import main.java.com.mime.minefront.gui.Launcher;
+import main.java.com.mime.minefront.input.InputHandler;
+
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.Serial;
-
-import com.mime.minefront.entity.mob.Player;
-import com.mime.minefront.graphics.Screen;
-import com.mime.minefront.gui.Launcher;
-import com.mime.minefront.input.InputHandler;
 
 public class Display extends Canvas implements Runnable {
 	@Serial
@@ -56,11 +52,10 @@ public class Display extends Canvas implements Runnable {
 		this.addMouseMotionListener(this.input);
 	}
 
-	public static Launcher getLauncherInstance() {
+	public static void getLauncherInstance() {
 		if (launcher == null) {
 			launcher = new Launcher(0);
 		}
-		return launcher;
 	}
 
 	public static int getGameWidth() {
@@ -157,7 +152,7 @@ public class Display extends Canvas implements Runnable {
 
 		Graphics g = bs.getDrawGraphics();
 		g.drawImage(this.img, 0, 0, Display.getGameWidth(), Display.getGameHeight(), null);
-		g.setFont(new Font("Verdana", 2, 50));
+		g.setFont(new Font("Verdana", Font.ITALIC, 50));
 		g.setColor(Color.YELLOW);
 		g.drawString(this.fps + " FPS", 20, 50);
 		g.dispose();

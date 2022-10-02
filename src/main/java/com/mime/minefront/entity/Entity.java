@@ -1,19 +1,19 @@
-package com.mime.minefront.entity;
+package main.java.com.mime.minefront.entity;
 
 public class Entity {
 
-	public double x, z;
-	protected boolean removed = false;
+  public double x, z;
+  protected boolean removed = false;
 
-	protected Entity() {
+  protected Entity() {
 
-	}
+  }
 
-	public void remove() {
-		this.removed = true;
-	}
+  public void remove() {
+    this.removed = true;
+  }
 
-	public void tick() {
+  public void tick() {
 
-	}
+  }
 }

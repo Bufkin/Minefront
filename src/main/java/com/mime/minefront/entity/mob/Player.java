@@ -1,4 +1,4 @@
-package com.mime.minefront.entity.mob;
+package main.java.com.mime.minefront.entity.mob;
 
 import com.mime.minefront.Display;
 import com.mime.minefront.input.InputHandler;
